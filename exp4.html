@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Shirt Order Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .order-form-container {
+            background-color: white;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        
+        input[type="text"], input[type="email"], input[type="date"], select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+        .receipt {
+            background-color: #f9f9f9;
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="order-form-container">
+        <h2>Order Your Custom T-Shirt</h2>
+        <form id="tshirtOrderForm" onsubmit="return validateForm()">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="mobile">Mobile No:</label>
+            <input type="text" id="mobile" name="mobile" maxlength="10" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="tagline">Tagline (Max 15 characters):</label>
+            <input type="text" id="tagline" name="tagline" maxlength="15" required>
+
+            <label for="color">T-Shirt Color:</label>
+            <select id="color" name="color" required>
+                <option value="" disabled selected>Select a color</option>
+                <option value="Red">Red</option>
+                <option value="Blue">Blue</option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
+            </select>
+
+            <label for="size">Size:</label>
+            <select id="size" name="size" required>
+                <option value="" disabled selected>Select a size</option>
+                <option value="S">Small</option>
+                <option value="M">Medium</option>
+                <option value="L">Large</option>
+                <option value="XL">Extra Large</option>
+            </select>
+
+            <label for="deliveryDate">Delivery Date:</label>
+            <input type="date" id="deliveryDate" name="deliveryDate" required>
+
+            <input type="submit" value="Submit Order">
+        </form>
+
+        <div class="receipt" id="receipt">
+            <h3>Order Receipt</h3>
+            <p id="receiptContent"></p>
+        </div>
+    </div>
+
+    <script>
+        
+        function validateForm() {
+            let mobile = document.getElementById('mobile').value;
+            let email = document.getElementById('email').value;
+            let tagline = document.getElementById('tagline').value;
+            let deliveryDate = document.getElementById('deliveryDate').value;
+            let today = new Date().toISOString().split('T')[0]; 
+
+            
+            if (!/^[789]\d{9}$/.test(mobile)) {
+                alert("Mobile number must start with 7, 8, or 9 and must be 10 digits long.");
+                return false;
+            }
+
+            
+            if (/[A-Z]/.test(email)) {
+                alert("Email should not contain capital letters.");
+                return false;
+            }
+
+            
+            if (tagline.length > 15) {
+                alert("Tagline should not exceed 15 characters.");
+                return false;
+            }
+
+            
+            if (deliveryDate <= today) {
+                alert("Delivery date must be a future date.");
+                return false;
+            }
+
+            
+            generateReceipt();
+            return false; 
+        }
+
+        
+        function generateReceipt() {
+            let name = document.getElementById('name').value;
+            let mobile = document.getElementById('mobile').value;
+            let email = document.getElementById('email').value;
+            let tagline = document.getElementById('tagline').value;
+            let color = document.getElementById('color').value;
+            let size = document.getElementById('size').value;
+            let deliveryDate = document.getElementById('deliveryDate').value;
+            let today = new Date();
+            let receiptContent = `
+                <strong>Name:</strong> ${name}<br>
+                <strong>Mobile:</strong> ${mobile}<br>
+                <strong>Email:</strong> ${email}<br>
+                <strong>Tagline:</strong> ${tagline}<br>
+                <strong>T-Shirt Color:</strong> ${color}<br>
+                <strong>Size:</strong> ${size}<br>
+                <strong>Delivery Date:</strong> ${deliveryDate}<br>
+                <strong>Receipt Generated On:</strong> ${today.toDateString()} at ${today.toLocaleTimeString()}
+            `;
+
+            document.getElementById('receiptContent').innerHTML = receiptContent;
+            document.getElementById('receipt').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
